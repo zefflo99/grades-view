@@ -1,17 +1,15 @@
-
-let Semestre = [];
+let semesterAmount = 0
 
 export function addSemester() {
 
   const representSemester = {
-    numero: Semestre.length + 1, 
     notes: [], 
     moyenne: 0, 
   };
-  /* console.log(representSemester) */
-
+    /* console.log(representSemester)  */
+ 
+   semesterAmount ++;
   
-  Semestre.push(representSemester);
 
   
   const newSemester = document.querySelector("#template_semester").content.cloneNode(true);
@@ -20,7 +18,7 @@ export function addSemester() {
 
   const semester = tontruc.lastElementChild;
 
-  semester.querySelector("dt").innerText = "Semestre " + representSemester.numero;
+  semester.querySelector("dt").innerText = "Semestre " + semesterAmount;
 
 
   const newNote = semester.querySelector("button");
@@ -59,6 +57,7 @@ export function addSemester() {
       updateAverage(representSemester);
 
       inputElement.value = "";
+      inputElement.focus()
     }
   });
 
