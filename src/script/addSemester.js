@@ -12,7 +12,7 @@ export function addSemester() {
   const gradeList = Semestre.querySelector("dd").querySelector("div");
   const moyenneSpan = Semestre.querySelector("#Moyenne");
 
-  // Réinitialiser la moyenne à zéro
+
   moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + "0";
 
   newNote.addEventListener("click", () => {
@@ -38,7 +38,7 @@ export function addSemester() {
 
       updateAverage();
 
-      // Réinitialiser la valeur de l'input à une chaîne vide
+   
       inputElement.value = "";
     }
   });
@@ -51,7 +51,7 @@ export function addSemester() {
       moyenneSpan.querySelector("circle").style.fill = getColorForValue(parseFloat(gradeSpans[0].innerText));
       return;
     }
-
+                                                              
     let total = 0;
 
     gradeSpans.forEach((span) => {
@@ -65,7 +65,7 @@ export function addSemester() {
 
     const roundedAverage = Math.round(average * 2) / 2;
 
-    // Réinitialiser la moyenne à zéro
+   
     moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + roundedAverage;
     moyenneSpan.querySelector("circle").style.fill = getColorForValue(roundedAverage);
   }
