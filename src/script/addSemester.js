@@ -1,17 +1,32 @@
+
+let Semestre = [];
+
 export function addSemester() {
+
+  const representSemester = {
+    numero: Semestre.length + 1, 
+    notes: [], 
+    moyenne: 0, 
+  };
+  /* console.log(representSemester) */
+
+  
+  Semestre.push(representSemester);
+
+  
   const newSemester = document.querySelector("#template_semester").content.cloneNode(true);
   const tontruc = document.querySelector("#tontruc");
   tontruc.appendChild(newSemester);
 
-  const Semestre = tontruc.lastElementChild;
+  const semester = tontruc.lastElementChild;
 
-  Semestre.querySelector("dt").innerText = "Semester " + tontruc.childElementCount;
+  semester.querySelector("dt").innerText = "Semestre " + representSemester.numero;
 
-  const newNote = Semestre.querySelector("button");
-  const inputElement = Semestre.querySelector("input");
-  const gradeList = Semestre.querySelector("dd").querySelector("div");
-  const moyenneSpan = Semestre.querySelector("#Moyenne");
 
+  const newNote = semester.querySelector("button");
+  const inputElement = semester.querySelector("input");
+  const gradeList = semester.querySelector("dd").querySelector("div");
+  const moyenneSpan = semester.querySelector("#Moyenne");
 
   moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + "0";
 
@@ -19,6 +34,11 @@ export function addSemester() {
     const inputValue = parseFloat(inputElement.value);
 
     if (!isNaN(inputValue)) {
+      
+      
+      representSemester.notes.push(inputValue);
+
+
       let iconTemplate = "";
       if (inputValue < 4) {
         iconTemplate = document.querySelector("#red-dot-svg").innerHTML;
@@ -36,39 +56,39 @@ export function addSemester() {
 
       gradeList.appendChild(newSpan);
 
-      updateAverage();
+      updateAverage(representSemester);
 
-   
       inputElement.value = "";
     }
   });
 
-  function updateAverage() {
-    const gradeSpans = document.querySelectorAll(".grade-span");
-
-    if (gradeSpans.length === 1) {
-      moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + gradeSpans[0].innerText;
-      moyenneSpan.querySelector("circle").style.fill = getColorForValue(parseFloat(gradeSpans[0].innerText));
+  function updateAverage(semestre) {
+    
+    
+    if (semestre.notes.length === 1) {
+      semestre.moyenne = semestre.notes[0];
+      moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + semestre.moyenne;
+      moyenneSpan.querySelector("circle").style.fill = getColorForValue(semestre.moyenne);
       return;
     }
-                                                              
+
     let total = 0;
 
-    gradeSpans.forEach((span) => {
-      const value = parseFloat(span.innerText);
-      if (!isNaN(value)) {
-        total += value;
-      }
+    semestre.notes.forEach((note) => {
+      total += note;
     });
 
-    const average = total / gradeSpans.length;
+    const average = total / semestre.notes.length;
 
     const roundedAverage = Math.round(average * 2) / 2;
 
-   
+    semestre.moyenne = roundedAverage;
     moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + roundedAverage;
     moyenneSpan.querySelector("circle").style.fill = getColorForValue(roundedAverage);
+    /*console.log(roundedAverage);*/
   }
+
+
 
   function getColorForValue(value) {
     if (value < 4) {
