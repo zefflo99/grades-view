@@ -19,7 +19,7 @@ export function addSemester() {
 
   semester.querySelector("dt").innerText = "Semestre " + semesterAmount;
 
-  moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + "0";
+  moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + "";
 
   const newNote = semester.querySelector("button");
   const inputElement = semester.querySelector("input");
@@ -70,6 +70,7 @@ export function addSemester() {
 
       const roundedAverage = Math.round(average * 2) / 2;
       semestre.moyenne = roundedAverage;
+      
     }
 
     totalAverage = (totalAverage * (semesterAmount - 1) + semestre.moyenne) / semesterAmount;
