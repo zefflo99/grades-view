@@ -1,4 +1,4 @@
-// Variables pour stocker le nombre total de semestres et la moyenne globale
+// Variables pour stocker le nombre sum de semestres et la moyenne globale
 let semesterAmount = 0;
 let totalAverage = 0;
 
@@ -37,10 +37,12 @@ export function addSemester() {
   newNote.addEventListener("click", () => {
     const inputValue = parseFloat(inputElement.value);
 
+
     // Verifi si l'entrer est un nombre valide
     if (!isNaN(inputValue)) {
       // Ajoute la nouvelle note a l'objet du semestre
       representSemester.notes.push(inputValue);
+
 
       // Determine le rond en fonction de la note
       let iconTemplate = "";
@@ -52,7 +54,8 @@ export function addSemester() {
         iconTemplate = document.querySelector("#green-dot-svg").innerHTML;
       }
 
-      // Crée un nouveau span pour la note et l'ajoute a la liste
+
+      // Crée un nouveau span pour la note et on l'ajoute a la liste
       const newSpan = document.createElement("span");
       newSpan.className =
         "inline-flex items-center gap-x-1.5 rounded-md px-2 py-2 text-sm font-medium text-gray-900 ring-1 ring-inset ring-gray-200";
@@ -60,12 +63,15 @@ export function addSemester() {
       newSpan.classList.add("grade-span");
       gradeList.appendChild(newSpan);
 
-      // Met à jour la moyenne du semestre
+
+      // Met a jour la moyenne du semestre
       updateAverage(representSemester);
+
 
       // Efface l'entrer et met le focus pour la suivante
       inputElement.value = "";
       inputElement.focus();
+
     }
   });
 
@@ -76,18 +82,19 @@ export function addSemester() {
       semestre.moyenne = semestre.notes[0];
     } else {
       // Calcul la moyenne des note
-      let total = 0;
+      let sum = 0;
       semestre.notes.forEach((note) => {
-        total += note;
+        sum += note;
+      
       });
-
-      const average = total / semestre.notes.length;
-
+      
+      const average = sum / semestre.notes.length;
+    
       // Arrondi la moyenne 
       const roundedAverage = Math.round(average * 2) / 2;
       semestre.moyenne = roundedAverage;
     }
-
+console.log(semesterAmount)
     // Met a jour la moyenne globale en fonction de la nouvelle moyenne du semestre
     totalAverage = (totalAverage * (semesterAmount - 1) + semestre.moyenne) / semesterAmount;
 
@@ -109,4 +116,25 @@ export function addSemester() {
       return "green";
     }
   }
+}
+
+function allSemesterAverage() {
+  const allAverage = document.querySelectorAll("#moyenne");
+  const generalSpan = document.querySelector(".general");
+  generalSpan.innerHTML = "";
+
+  let sum = 0;
+
+  for (let i = 0; i < allAverage.length; i++) {
+    sum += parseFloat(allAverage[i].innerText);
+  }
+
+  const generalAvg = sum / allAverage.length;
+
+ 
+  getColorForValue(generalAvg)
+  console.log(generalAvg);
+ 
+  generalSpan.appendChild(document.createTextNode(generalAvg));
+  console.log(allAverage);
 }
