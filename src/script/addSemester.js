@@ -1,6 +1,7 @@
 // Variables to store the total number of semesters and the overall average
 let semesterAmount = 0;
 let totalAverage = 0;
+let allRepresentSemester = [];
 
 // Function to add a new semester
 export function addSemester() {
@@ -9,12 +10,15 @@ export function addSemester() {
     notes: [],
     moyenne: null,
   };
+  allRepresentSemester.push(representSemester)
 
   // Increment the semester count
   semesterAmount++;
 
   // Clone the template for a new semester and append it to the DOM
-  const newSemester = document.querySelector("#template_semester").content.cloneNode(true);
+  const newSemester = document
+    .querySelector("#template_semester")
+    .content.cloneNode(true);
   const DOM = document.querySelector("#DOM");
   DOM.appendChild(newSemester);
 
@@ -25,8 +29,11 @@ export function addSemester() {
   // Set the semester title
   semester.querySelector("dt").innerText = "Semester " + semesterAmount;
 
+  console.log(representSemester);
+
   // Set the default circle in the semester's average tag
-  moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + "";
+  moyenneSpan.innerHTML =
+    document.querySelector("#green-dot-svg").innerHTML + "";
 
   // Event listener to add a new grade
   const newNote = semester.querySelector("button");
@@ -37,7 +44,7 @@ export function addSemester() {
     const inputValue = parseFloat(inputElement.value);
 
     // Check if the input is a valid number
-    if (!isNaN(inputValue)) {
+    if (!isNaN(inputValue) && inputValue >= 1 && inputValue <= 6) {
       // Add the new grade to the semester object
       representSemester.notes.push(inputValue);
 
@@ -79,7 +86,6 @@ export function addSemester() {
       semester1.notes.forEach((note) => {
         sum += note;
       });
-
       const average = sum / semester1.notes.length;
 
       // Round the average
@@ -89,50 +95,59 @@ export function addSemester() {
       console.log("Semester Average:", semester1.moyenne);
 
       // Update the overall average based on the new semester average
-      totalAverage = (totalAverage * (semesterAmount - 1) + semester1.moyenne) / semesterAmount;
-
+ 
+      totalAverage = (totalAverage * (semesterAmount - 1) + semester1.moyenne) / allRepresentSemester.filter(semester => semester.moyenne > 0).length;
       // Update the website's visuals with the new semester and overall averages
-      moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + semester1.moyenne;
-      moyenneSpan.querySelector("circle").style.fill = getColorForValue(semester1.moyenne);
+      moyenneSpan.innerHTML =
+        document.querySelector("#green-dot-svg").innerHTML + semester1.moyenne;
+      moyenneSpan.querySelector("circle").style.fill = getColorForValue(
+        semester1.moyenne,
+      );
 
       allSemesterAverage();
     }
+  
   }
 
   // New function to calculate the total average of all semesters
   function allSemesterAverage() {
-    console.log(totalAverage);
+      
+      console.log(totalAverage);
 
-    const totalRounded = Math.round(totalAverage * 2) / 2;
+      const totalRounded = Math.round(totalAverage * 2) / 2;
 
-    console.log(totalRounded);
+      console.log(totalRounded);
 
-    // Update the total average display
-    const moyenneTotalSpan = document.querySelector("#MoyenneTotal");
-    moyenneTotalSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + totalRounded;
+      // Update the total average display
+      const moyenneTotalSpan = document.querySelector("#MoyenneTotal");
+      moyenneTotalSpan.innerHTML =
+        document.querySelector("#green-dot-svg").innerHTML + totalRounded;
 
-    
+      // Set the color for the total average circle
+      const colorForTotalAverage = getColorForValue(totalAverage);
+      moyenneTotalSpan.querySelector("circle").style.fill =
+        colorForTotalAverage;
 
-    // Set the color for the total average circle
-    const colorForTotalAverage = getColorForValue(totalAverage);
-    moyenneTotalSpan.querySelector("circle").style.fill = colorForTotalAverage;
+      // Update additional visuals with the total average
+      const firstDD = document.querySelector(
+        ".flex-wrap .text-3xl.font-medium.leading-10.tracking-tight.text-gray-900",
+      );
+      firstDD.innerHTML =
+        document.querySelector("#green-dot-svg").innerHTML + totalRounded;
 
-    // Update additional visuals with the total average
-    const firstDD = document.querySelector(".flex-wrap .text-3xl.font-medium.leading-10.tracking-tight.text-gray-900");
-    firstDD.innerHTML = document.querySelector("#green-dot-svg").innerHTML + totalRounded;
-
-    const colorForTotalAverage2 = getColorForValue(totalAverage);
-    firstDD.querySelector("circle").style.fill = colorForTotalAverage2;
-  }
-
-  // Function to determine the color based on the value
-  function getColorForValue(value) {
-    if (value < 4) {
-      return "red";
-    } else if (value < 5) {
-      return "orange";
-    } else {
-      return "green";
+      const colorForTotalAverage2 = getColorForValue(totalAverage);
+      firstDD.querySelector("circle").style.fill = colorForTotalAverage2;
     }
-  }
+
+    // Function to determine the color based on the value
+    function getColorForValue(value) {
+      if (value < 4) {
+        return "red";
+      } else if (value < 5) {
+        return "orange";
+      } else {
+        return "green";
+      }
+    }
+  
 }
