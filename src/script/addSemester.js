@@ -1,35 +1,34 @@
-// Variables pour stocker le nombre sum de semestres et la moyenne globale
+// Variables to store the total number of semesters and the overall average
 let semesterAmount = 0;
 let totalAverage = 0;
 
-// Fonction pour ajouter un nouveau semestre
+// Function to add a new semester
 export function addSemester() {
-  // Objet qui represent un semestre avec les note et moyenne
+  // Object representing a semester with grades and average
   const representSemester = {
     notes: [],
     moyenne: null,
   };
 
-  // Augmente le nombre de semestre
+  // Increment the semester count
   semesterAmount++;
 
-  // Clone la template d'un nouveau semestre et l'ajoute au dom
+  // Clone the template for a new semester and append it to the DOM
   const newSemester = document.querySelector("#template_semester").content.cloneNode(true);
-  const tontruc = document.querySelector("#tontruc");
-  tontruc.appendChild(newSemester);
+  const DOM = document.querySelector("#DOM");
+  DOM.appendChild(newSemester);
 
-  // Recupere les éléments du html 
-  const semester = tontruc.lastElementChild;
+  // Get HTML elements
+  const semester = DOM.lastElementChild;
   const moyenneSpan = semester.querySelector("#Moyenne");
-  const moyenneTotalSpan = document.querySelector("#MoyenneTotal");
 
-  // Defini le titre du semestre
-  semester.querySelector("dt").innerText = "Semestre " + semesterAmount;
+  // Set the semester title
+  semester.querySelector("dt").innerText = "Semester " + semesterAmount;
 
-  // Defini le rond de base dans la balise de moyenne du semestre
+  // Set the default circle in the semester's average tag
   moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + "";
 
-  // Ecouteur pour ajouter une nouvelle note
+  // Event listener to add a new grade
   const newNote = semester.querySelector("button");
   const inputElement = semester.querySelector("input");
   const gradeList = semester.querySelector("dd").querySelector("div");
@@ -37,14 +36,12 @@ export function addSemester() {
   newNote.addEventListener("click", () => {
     const inputValue = parseFloat(inputElement.value);
 
-
-    // Verifi si l'entrer est un nombre valide
+    // Check if the input is a valid number
     if (!isNaN(inputValue)) {
-      // Ajoute la nouvelle note a l'objet du semestre
+      // Add the new grade to the semester object
       representSemester.notes.push(inputValue);
 
-
-      // Determine le rond en fonction de la note
+      // Determine the circle based on the grade
       let iconTemplate = "";
       if (inputValue < 4) {
         iconTemplate = document.querySelector("#red-dot-svg").innerHTML;
@@ -54,8 +51,7 @@ export function addSemester() {
         iconTemplate = document.querySelector("#green-dot-svg").innerHTML;
       }
 
-
-      // Crée un nouveau span pour la note et on l'ajoute a la liste
+      // Create a new span for the grade and add it to the list
       const newSpan = document.createElement("span");
       newSpan.className =
         "inline-flex items-center gap-x-1.5 rounded-md px-2 py-2 text-sm font-medium text-gray-900 ring-1 ring-inset ring-gray-200";
@@ -63,69 +59,73 @@ export function addSemester() {
       newSpan.classList.add("grade-span");
       gradeList.appendChild(newSpan);
 
-
-      // Met a jour la moyenne du semestre
+      // Update the semester average
       updateAverage(representSemester);
 
-
-
-      // Efface l'entrer et met le focus pour la suivante
+      // Clear the input and set focus for the next one
       inputElement.value = "";
       inputElement.focus();
-
     }
   });
 
-  // Fonction pour mettre a jour la moyenne du semestre
-  function updateAverage(semestre) {
-    if (semestre.notes.length === 0) {
-      // S'il n'y a pas de notes, on défini la moyenne sur la première note
-      semestre.moyenne = semestre.notes[0];
+  // Function to update the semester average
+  function updateAverage(semester1) {
+    if (semester1.notes.length === 0) {
+      // If there are no grades, set the average to the first grade
+      semester1.moyenne = semester1.notes[0];
     } else {
-      // Calcul la moyenne des notes
+      // Calculate the average of the grades
       let sum = 0;
-      semestre.notes.forEach((note) => {
+      semester1.notes.forEach((note) => {
         sum += note;
       });
-  
-      const average = sum / semestre.notes.length;
-  
-      // Arrondi la moyenne
+
+      const average = sum / semester1.notes.length;
+
+      // Round the average
       const roundedAverage = Math.round(average * 2) / 2;
-      semestre.moyenne = roundedAverage;
-  
-      console.log("Moyenne du semestre :", semestre.moyenne);
-  
-      // Met à jour la moyenne globale en fonction de la nouvelle moyenne du semestre
-      totalAverage = (totalAverage * (semesterAmount - 1) + semestre.moyenne) / semesterAmount;
-  
-      // Met à jour le visuel du site avec les nouvelles moyennes du semestre et globale
-      moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + semestre.moyenne;
-      moyenneSpan.querySelector("circle").style.fill = getColorForValue(semestre.moyenne);
+      semester1.moyenne = roundedAverage;
 
+      console.log("Semester Average:", semester1.moyenne);
 
-      // Affiche la moyenne totale dans la balise avec l'id "MoyenneTotal"
-      
-  
-      
+      // Update the overall average based on the new semester average
+      totalAverage = (totalAverage * (semesterAmount - 1) + semester1.moyenne) / semesterAmount;
+
+      // Update the website's visuals with the new semester and overall averages
+      moyenneSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + semester1.moyenne;
+      moyenneSpan.querySelector("circle").style.fill = getColorForValue(semester1.moyenne);
+
       allSemesterAverage();
     }
   }
-  
-  // Nouvelle fonction pour calculer la moyenne totale de tous les semestres
+
+  // New function to calculate the total average of all semesters
   function allSemesterAverage() {
+    console.log(totalAverage);
+
+    const totalRounded = Math.round(totalAverage * 2) / 2;
+
+    console.log(totalRounded);
+
+    // Update the total average display
     const moyenneTotalSpan = document.querySelector("#MoyenneTotal");
-    moyenneTotalSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + totalAverage;
+    moyenneTotalSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + totalRounded;
 
+    
 
-    moyenneTotalSpan.innerHTML = document.querySelector("#green-dot-svg").innerHTML + totalAverage;
-        
-      
-      const colorForTotalAverage = getColorForValue(totalAverage);
-      moyenneTotalSpan.querySelector("circle").style.fill = colorForTotalAverage;
+    // Set the color for the total average circle
+    const colorForTotalAverage = getColorForValue(totalAverage);
+    moyenneTotalSpan.querySelector("circle").style.fill = colorForTotalAverage;
+
+    // Update additional visuals with the total average
+    const firstDD = document.querySelector(".flex-wrap .text-3xl.font-medium.leading-10.tracking-tight.text-gray-900");
+    firstDD.innerHTML = document.querySelector("#green-dot-svg").innerHTML + totalRounded;
+
+    const colorForTotalAverage2 = getColorForValue(totalAverage);
+    firstDD.querySelector("circle").style.fill = colorForTotalAverage2;
   }
 
-  // Fonction pour détermié la couleur en fonction de la valeur
+  // Function to determine the color based on the value
   function getColorForValue(value) {
     if (value < 4) {
       return "red";
@@ -136,5 +136,3 @@ export function addSemester() {
     }
   }
 }
-
- 
